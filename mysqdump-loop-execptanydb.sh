@@ -29,3 +29,26 @@ for DB in $(cat ${DBLISTFILE}); do
     
     echo "Dump completed for ${DB} and saved to ${DUMPFILE}"
 done
+
+
+
+====
+
+
+#!/bin/bash
+
+TIMESTAMP=$(date +"%F")
+BACKUP_DIR="./"
+
+#MYSQL_PASSWORD="*******"
+MYSQL=/usr/bin/mysql
+MYSQLDUMP=/usr/bin/mysqldump
+
+mkdir -p $BACKUP_DIR
+
+databases=`$MYSQL  -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema)"`
+
+for db in $databases; do
+echo $db
+$MYSQLDUMP --force --opt  --databases $db | gzip > "$BACKUP_DIR/$db.gz"
+done
